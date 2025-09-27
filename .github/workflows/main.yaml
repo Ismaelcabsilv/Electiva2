@@ -1,0 +1,26 @@
+name: Deploy to Surge
+
+on:
+  push:
+    branches: [ "dev" ]   # cambia a "main" si usas main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Surge CLI
+      run: npm install --global surge
+
+      - name: Deploy to Surge
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+          SURGE_DOMAIN: ${{ vars.SURGE_DOMAIN }}
+        run: surge ./ "$SURGE_DOMAIN" --token "$SURGE_TOKEN"
